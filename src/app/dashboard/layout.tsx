@@ -1,16 +1,19 @@
 import { requireAuth } from '@/lib/auth'
-import { DashboardSidebar } from './DashboardSidebar'
+import DashboardSidebar from '@/components/dashboard/DashboardSidebar'
+
+export const dynamic = 'force-dynamic'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const session = await requireAuth()
+  await requireAuth()
 
   return (
-    <div className="mx-auto flex min-h-[calc(100vh-73px)] max-w-7xl flex-col gap-0 px-4 py-8 md:flex-row md:gap-8 md:px-6">
-      {/* Sidebar */}
-      <DashboardSidebar email={session.email} />
-
-      {/* Main content */}
-      <main className="flex-1 py-2 md:py-0">{children}</main>
+    <div className="min-h-[calc(100vh-73px)]">
+      <DashboardSidebar />
+      <main className="lg:ml-64">
+        <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+          {children}
+        </div>
+      </main>
     </div>
   )
 }
