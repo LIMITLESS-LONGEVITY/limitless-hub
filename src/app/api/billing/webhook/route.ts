@@ -4,6 +4,35 @@ import { prisma } from '@/lib/prisma'
 import { MEMBERSHIP_DISCOUNTS } from '@/lib/stripe-config'
 import type Stripe from 'stripe'
 
+/* ── PATHS tier sync helper ── */
+
+async function syncPathsTier(userId: string, hubPlan: string) {
+  const tierMap: Record<string, string> = {
+    OPTIMUS: 'premium',
+    IMMORTALITAS: 'premium',
+    TRANSCENDENTIA: 'premium',
+    VIP: 'premium',
+    ECLINIC: 'regular',
+  }
+  const tier = tierMap[hubPlan] || 'free'
+
+  const pathsUrl = process.env.PATHS_INTERNAL_URL || process.env.NEXT_PUBLIC_PATHS_URL
+  if (!pathsUrl || !process.env.HUB_SERVICE_KEY) return
+
+  try {
+    await fetch(`${pathsUrl}/api/internal/tier-sync`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Service-Key': process.env.HUB_SERVICE_KEY,
+      },
+      body: JSON.stringify({ userId, tier }),
+    })
+  } catch (err) {
+    console.error('PATHS tier sync failed:', err)
+  }
+}
+
 export async function POST(request: Request) {
   try {
     if (!stripe) {
@@ -67,6 +96,9 @@ export async function POST(request: Request) {
             diagnosticDiscount: discount,
           },
         })
+
+        // Sync tier to PATHS
+        await syncPathsTier(pathsUserId, plan)
         break
       }
 
@@ -99,6 +131,13 @@ export async function POST(request: Request) {
 
       case 'customer.subscription.deleted': {
         const subscription = event.data.object as Stripe.Subscription
+
+        // Find the membership to get the user's pathsUserId for tier sync
+        const membership = await prisma.membership.findFirst({
+          where: { stripeSubId: subscription.id },
+          include: { user: true },
+        })
+
         await prisma.membership.updateMany({
           where: { stripeSubId: subscription.id },
           data: {
@@ -106,6 +145,11 @@ export async function POST(request: Request) {
             cancelledAt: new Date(),
           },
         })
+
+        // Sync tier to PATHS (downgrade to free)
+        if (membership?.user?.pathsUserId) {
+          await syncPathsTier(membership.user.pathsUserId, 'free')
+        }
         break
       }
 
