@@ -3,6 +3,17 @@
 @theme {
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-display: 'Cormorant Garamond', Georgia, serif;
+  --color-brand-dark: #0A0E1A;
+  --color-brand-dark-alt: #0F1424;
+  --color-brand-gold: #C9A84C;
+  --color-brand-gold-dim: rgba(201, 168, 76, 0.15);
+  --color-brand-teal: #00B4D8;
+  --color-brand-teal-dim: rgba(0, 180, 216, 0.12);
+  --color-brand-silver: #B0B8C1;
+  --color-brand-light: #FAFAFA;
+  --color-brand-glass-bg: rgba(255, 255, 255, 0.04);
+  --color-brand-glass-bg-hover: rgba(255, 255, 255, 0.08);
+  --color-brand-glass-border: rgba(255, 255, 255, 0.08);
 }
 
 :root {
@@ -17,18 +28,6 @@
   --limitless-glass-bg: rgba(255, 255, 255, 0.04);
   --limitless-glass-bg-hover: rgba(255, 255, 255, 0.08);
   --limitless-glass-border: rgba(255, 255, 255, 0.08);
-
-  --color-brand-dark: var(--limitless-dark);
-  --color-brand-dark-alt: var(--limitless-dark-alt);
-  --color-brand-gold: var(--limitless-gold);
-  --color-brand-gold-dim: var(--limitless-gold-dim);
-  --color-brand-teal: var(--limitless-teal);
-  --color-brand-teal-dim: var(--limitless-teal-dim);
-  --color-brand-silver: var(--limitless-silver);
-  --color-brand-light: var(--limitless-light);
-  --color-brand-glass-bg: var(--limitless-glass-bg);
-  --color-brand-glass-bg-hover: var(--limitless-glass-bg-hover);
-  --color-brand-glass-border: var(--limitless-glass-border);
 }
 
 body {
