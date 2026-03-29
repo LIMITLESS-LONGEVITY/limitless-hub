@@ -21,9 +21,10 @@ export default function Header() {
       style={{ WebkitBackdropFilter: 'blur(16px)' }}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <Link href="/" className="font-display text-2xl tracking-[0.25em] text-brand-gold">
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- cross-app nav to OS Dashboard */}
+        <a href="/" className="font-display text-2xl tracking-[0.25em] text-brand-gold hover:text-brand-gold/80 transition-colors">
           LIMITLESS
-        </Link>
+        </a>
 
         {/* Desktop nav */}
         <nav className="hidden items-center gap-8 md:flex">
