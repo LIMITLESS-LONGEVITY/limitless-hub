@@ -31,3 +31,13 @@ export async function requireAuth(): Promise<JWTPayload> {
   }
   return session
 }
+
+const CLINICIAN_ROLES = ['admin', 'contributor', 'editor']
+
+export async function requireClinician(): Promise<JWTPayload> {
+  const session = await requireAuth()
+  if (!CLINICIAN_ROLES.includes(session.role)) {
+    redirect('/dashboard')
+  }
+  return session
+}
